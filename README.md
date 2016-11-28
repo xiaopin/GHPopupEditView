@@ -7,12 +7,18 @@
 
 A popup view for editing information.
 
+## Preview
+
+- ![GIF](./demo.gif)
+- ![Preview](./preview1.png)
+- ![Preview](./preview2.png)
+
 ## Usage
 
 ``` Objective-C
 GHPopupEditView *popupView = [[GHPopupEditView alloc] init];
-[popupView setTitle:@"编辑 昵称"];
-[popupView setPlaceholderString:@"请输入昵称"];
+[popupView setTitle:@"edit nickname"];
+[popupView setPlaceholderString:@"Please enter a nickname"];
 [popupView setKeyboardType:UIKeyboardTypeDefault];
 [popupView setOKButtonThemeColor:[UIColor orangeColor]];
 [popupView setShouldChangeHandler:^(UITextField *textField, NSRange range, NSString *replacementString) {
@@ -25,7 +31,7 @@ GHPopupEditView *popupView = [[GHPopupEditView alloc] init];
 [popupView setVerifyHandler:^(NSString *text) {
     NSString *nickname = [text stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     if (nickname.length == 0) {
-        return @"昵称不能为空";
+        return @"Nickname can not be empty.";
     }
     return @"";
 }];
@@ -48,4 +54,4 @@ Add manually:
 - Import header file: `#import "GHPopupEditView.h"`
 
 ## License
-GHPopupEditView is available under the GPL license. See the LICENSE file for more info.
+`GHPopupEditView` is licensed under the MIT License - see the LICENSE file for details

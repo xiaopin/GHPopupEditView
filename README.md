@@ -54,4 +54,4 @@ Add manually:
 - Import header file: `#import "GHPopupEditView.h"`
 
 ## License
-`GHPopupEditView` is licensed under the MIT License - see the LICENSE file for details
+`GHPopupEditView` is licensed under the GPL License - see the LICENSE file for details

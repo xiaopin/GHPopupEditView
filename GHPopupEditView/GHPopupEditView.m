@@ -62,9 +62,18 @@
     [self.textField setKeyboardType:keyboardType];
 }
 
+- (void)setReturnKeyType:(UIReturnKeyType)type {
+    [self.textField setReturnKeyType:type];
+}
+
 - (void)setOKButtonThemeColor:(UIColor *)color {
     [self.okButton setTitleColor:color forState:UIControlStateNormal];
     [self.okButton.layer setBorderColor:[color CGColor]];
+}
+
+- (void)setCancelButtonThemeColor:(UIColor *)color {
+    [self.cancelButton setTitleColor:color forState:UIControlStateNormal];
+    [self.cancelButton.layer setBorderColor:[color CGColor]];
 }
 
 - (void)show {

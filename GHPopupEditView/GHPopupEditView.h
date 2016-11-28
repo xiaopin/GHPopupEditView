@@ -24,13 +24,13 @@ typedef void(^GHPopupEditViewCompletionHandler)(NSString *text);
 typedef NSString*(^GHPopupEditViewVerifyHandler)(NSString *text);
 
 /**
- 过滤用户用户的文本
+ 限制用户输入的字符
 
  @see UITextFieldDelegate -(BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string;
  @param textField           输入框
  @param range               替换位置
  @param replacementString   替换的文本
- @return 返回NO则不更改文本
+ @return 返回NO则不更改文本(放弃用户当前输入的字符)
  */
 typedef BOOL(^GHPopupEditViewShouldChangeHandler)(UITextField *textField, NSRange range, NSString *replacementString);
 
@@ -52,8 +52,12 @@ typedef BOOL(^GHPopupEditViewShouldChangeHandler)(UITextField *textField, NSRang
 - (void)setDefaultText:(NSString *)text;
 /// 设置键盘类型
 - (void)setKeyboardType:(UIKeyboardType)keyboardType;
-/// 设置`确定`按钮的主题色
+/// 设置键盘`返回按钮`的类型,默认`UIReturnKeyDone`
+- (void)setReturnKeyType:(UIReturnKeyType)type;
+/// 设置`确定按钮`的主题色
 - (void)setOKButtonThemeColor:(UIColor *)color;
+/// 设置`取消按钮`的主题色
+- (void)setCancelButtonThemeColor:(UIColor *)color;
 /// 显示视图
 - (void)show;
 

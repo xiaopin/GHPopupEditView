@@ -1,6 +1,7 @@
 //
 //  GHPopupEditView.m
 //  GitHub-iOS
+//  https://github.com/xiaopin/GHPopupEditView
 //
 //  Created by nhope on 2016/11/25.
 //  Copyright © 2016年 xiaopin. All rights reserved.
@@ -35,7 +36,8 @@
         [self.contentView addSubview:self.messageLabel];
         [self.contentView addSubview:self.cancelButton];
         [self.contentView addSubview:self.okButton];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(screenDidRotationNotification:) name:UIApplicationDidChangeStatusBarOrientationNotification object:nil];
+        
+        [self registerNotification];
     }
     return self;
 }
@@ -88,8 +90,9 @@
     self.contentView.transform = CGAffineTransformMakeScale(0.5, 0.5);
     [UIView animateWithDuration:0.5 delay:0.0 usingSpringWithDamping:0.65 initialSpringVelocity:0.0 options:UIViewAnimationOptionAllowAnimatedContent animations:^{
         self.contentView.transform = CGAffineTransformIdentity;
-    } completion:nil];
-    [self.textField becomeFirstResponder];
+    } completion:^(BOOL finished) {
+        [self.textField becomeFirstResponder];
+    }];
 }
 
 #pragma mark - <UITextFieldDelegate>
@@ -127,8 +130,38 @@
     [self hide];
 }
 
+/// 屏幕旋转的通知
 - (void)screenDidRotationNotification:(NSNotification *)notification {
     [self adjustFrame];
+}
+
+/// 键盘frame改变的通知
+- (void)keyboardDidChangeFrameNotification:(NSNotification *)notification {
+    CGRect keyboardFrame = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue];
+    CGRect contentFrame = self.contentView.frame;
+    CGFloat remainingHeight = CGRectGetHeight(self.frame) - CGRectGetHeight(keyboardFrame);
+    CGFloat contentHeight = CGRectGetHeight(contentFrame);
+    
+    if (CGRectGetMaxY(contentFrame) < keyboardFrame.origin.y) {
+        return;
+    }
+    if (remainingHeight > contentHeight) {
+        contentFrame.origin.y = (remainingHeight-contentHeight)/2;
+    } else {
+        contentFrame.origin.y = 10.0;
+    }
+    [UIView animateWithDuration:0.25 animations:^{
+        self.contentView.frame = contentFrame;
+    }];
+}
+
+/// 键盘消失的通知
+- (void)keyboardDidHideNotification:(NSNotification *)notification {
+    CGRect contentFrame = self.contentView.frame;
+    contentFrame.origin.y = (CGRectGetHeight(self.frame)-CGRectGetHeight(contentFrame))/2;
+    [UIView animateWithDuration:0.25 animations:^{
+        self.contentView.frame = contentFrame;
+    }];
 }
 
 #pragma mark - Private
@@ -142,7 +175,6 @@
 }
 
 - (void)adjustFrame {
-    BOOL isPortrait = UIDeviceOrientationIsPortrait([UIDevice currentDevice].orientation);
     BOOL iPhone = UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPhone;
     CGFloat contentWidth = iPhone ? 300.0 : 500.0;
     CGFloat padding = 10.0;
@@ -154,18 +186,28 @@
     _cancelButton.frame = CGRectMake(padding, CGRectGetMaxY(_messageLabel.frame), (contentWidth-padding*3)/2, 30.0);
     _okButton.frame = CGRectMake(CGRectGetMaxX(_cancelButton.frame)+padding, CGRectGetMinY(_cancelButton.frame), CGRectGetWidth(_cancelButton.frame), CGRectGetHeight(_cancelButton.frame));
     
-    CGFloat contentY;
     CGFloat contentHeight = CGRectGetMaxY(_okButton.frame)+padding;
-    if (iPhone) {
-        if (isPortrait) {
-            contentY = CGRectGetHeight(self.frame) > 568.0 ? 200.0 : 130.0;
-        } else {
-            contentY = 20.0;
-        }
-    } else {
-        contentY = isPortrait ? (CGRectGetHeight(self.frame)-contentHeight)/2 : 180.0;
-    }
+    CGFloat contentY = (CGRectGetHeight(self.frame)-contentHeight)/2;
     _contentView.frame = CGRectMake((CGRectGetWidth(self.frame)-contentWidth)/2, contentY, contentWidth, contentHeight);
+}
+
+- (void)registerNotification {
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    
+    [defaultCenter addObserver:self
+                      selector:@selector(screenDidRotationNotification:)
+                          name:UIApplicationDidChangeStatusBarOrientationNotification
+                        object:nil];
+    
+    [defaultCenter addObserver:self
+                      selector:@selector(keyboardDidChangeFrameNotification:)
+                          name:UIKeyboardDidChangeFrameNotification
+                        object:nil];
+    
+    [defaultCenter addObserver:self
+                      selector:@selector(keyboardDidHideNotification:)
+                          name:UIKeyboardDidHideNotification
+                        object:nil];
 }
 
 #pragma mark - setter & getter

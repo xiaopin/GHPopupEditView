@@ -1,6 +1,7 @@
 # GHPopupEditView
 
 [![Build](https://img.shields.io/wercker/ci/wercker/docs.svg)]()
+[![Pod Version](https://img.shields.io/badge/pod-1.0.0-blue.svg?style=flat)]()
 [![Platform](https://img.shields.io/badge/platform-iOS%207%2B-blue.svg?style=flat)]()
 [![Device](https://img.shields.io/badge/device-iPhone|iPad|iPod-orange.svg?style=flat)]()
 [![License](https://img.shields.io/badge/license-GPL%20V3-yellow.svg?style=flat)]()

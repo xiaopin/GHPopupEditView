@@ -49,9 +49,26 @@ GHPopupEditView *popupView = [[GHPopupEditView alloc] init];
 
 ## Installation
 
-Add manually:
+#### Add manually:
 - Drag `GHPopupEditView` folder to your project.
 - Import header file: `#import "GHPopupEditView.h"`
+
+#### Installation with CocoaPods
+
+Podfile
+``` ruby
+platform :ios, '7.0'
+
+target 'TargetName' do
+    pod 'GHPopupEditView', '~> 1.0.0'
+end
+```
+
+Then, run the following command:
+
+``` bash
+$ pod install
+```
 
 ## License
 `GHPopupEditView` is licensed under the GPL License - see the LICENSE file for details
